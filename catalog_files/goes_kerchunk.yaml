@@ -1,0 +1,108 @@
+aliases: {}
+data:
+  0e0c2948d0bc5691:
+    datatype: intake.readers.datatypes:Parquet
+    kwargs:
+      storage_options: null
+      url: s3://esip/rsignell/testing/combined.parq
+    metadata: {}
+    user_parameters: {}
+entries:
+  goes_kerchunk:
+    kwargs:
+      args:
+      - '{data(0e0c2948d0bc5691)}'
+      backend_kwargs:
+        storage_options:
+          lazy: true
+          remote_options:
+            anon: true
+          remote_protocol: s3
+          target_options:
+            anon: true
+            client_kwargs:
+              endpoint_url: https://ncsa.osn.xsede.org
+      chunks: {}
+      engine: kerchunk
+    metadata:
+      creation_code: |
+        import intake
+        import xarray as xr
+        combined_parquet = 's3://esip/rsignell/testing/combined.parq'
+        ds = xr.open_dataset(combined_parquet,
+                            engine='kerchunk', chunks={},
+                            backend_kwargs=dict(storage_options=dict(remote_protocol='s3', lazy=True,
+                                                                     target_options=dict(anon=True, client_kwargs={'endpoint_url': 'https://ncsa.osn.xsede.org'}),
+                                                                     remote_options=dict(anon=True))))
+        reader = intake.reader_from_call(_i9, join_lines=True)
+      repr: |
+        <xarray.Dataset>
+        Dimensions:                                                 (t: 24, y: 5424,
+                                                                     x: 5424,
+                                                                     SST_day_night_emissive_bands: 4,
+                                                                     SST_night_only_emissive_band: 1,
+                                                                     number_of_SZA_bounds: 2,
+                                                                     number_of_LZA_bounds: 2,
+                                                                     number_of_time_bounds: 2,
+                                                                     number_of_image_bounds: 2)
+        Coordinates: (12/14)
+            SST_day_night_emissive_band_ids                         (t, SST_day_night_emissive_bands) float32 dask.array<chunksize=(1, 4), meta=np.ndarray>
+            SST_day_night_emissive_wavelengths                      (t, SST_day_night_emissive_bands) float32 dask.array<chunksize=(1, 4), meta=np.ndarray>
+            SST_night_only_emissive_band_id                         (t, SST_night_only_emissive_band) int8 dask.array<chunksize=(1, 1), meta=np.ndarray>
+            SST_night_only_emissive_wavelength                      (t, SST_night_only_emissive_band) float32 dask.array<chunksize=(1, 1), meta=np.ndarray>
+            day_solar_zenith_angle                                  (t) float32 dask.array<chunksize=(1,), meta=np.ndarray>
+            night_solar_zenith_angle                                (t) float32 dask.array<chunksize=(1,), meta=np.ndarray>
+            ...                                                      ...
+            retrieval_solar_zenith_angle                            (t) float32 dask.array<chunksize=(1,), meta=np.ndarray>
+          * t                                                       (t) datetime64[ns] ...
+          * x                                                       (x) float64 -0.15...
+            x_image                                                 (t) float32 dask.array<chunksize=(1,), meta=np.ndarray>
+          * y                                                       (y) float64 0.151...
+            y_image                                                 (t) float32 dask.array<chunksize=(1,), meta=np.ndarray>
+        Dimensions without coordinates: SST_day_night_emissive_bands,
+                                        SST_night_only_emissive_band,
+                                        number_of_SZA_bounds, number_of_LZA_bounds,
+                                        number_of_time_bounds, number_of_image_bounds
+        Data variables: (12/42)
+            DQF                                                     (t, y, x) float32 dask.array<chunksize=(1, 226, 226), meta=np.ndarray>
+            SST                                                     (t, y, x) float32 dask.array<chunksize=(1, 226, 226), meta=np.ndarray>
+            algorithm_dynamic_input_data_container                  (t) float64 dask.array<chunksize=(1,), meta=np.ndarray>
+            algorithm_product_version_container                     (t) float64 dask.array<chunksize=(1,), meta=np.ndarray>
+            day_solar_zenith_angle_bounds                           (t, number_of_SZA_bounds) float32 dask.array<chunksize=(1, 2), meta=np.ndarray>
+            geospatial_lat_lon_extent                               (t) float32 dask.array<chunksize=(1,), meta=np.ndarray>
+            ...                                                      ...
+            total_number_of_severely_degraded_quality_ocean_pixels  (t) float64 dask.array<chunksize=(1,), meta=np.ndarray>
+            total_number_of_unprocessed_pixels                      (t) float64 dask.array<chunksize=(1,), meta=np.ndarray>
+            twilight_solar_zenith_angle                             (t) float32 dask.array<chunksize=(1,), meta=np.ndarray>
+            twilight_solar_zenith_angle_bounds                      (t, number_of_SZA_bounds) float32 dask.array<chunksize=(1, 2), meta=np.ndarray>
+            x_image_bounds                                          (t, number_of_image_bounds) float32 dask.array<chunksize=(1, 2), meta=np.ndarray>
+            y_image_bounds                                          (t, number_of_image_bounds) float32 dask.array<chunksize=(1, 2), meta=np.ndarray>
+        Attributes: (12/33)
+            Conventions:               CF-1.7
+            Metadata_Conventions:      Unidata Dataset Discovery v1.0
+            cdm_data_type:             Image
+            cell_methods:              quantitative_local_zenith_angle: sum retrieval...
+            dataset_name:              OR_ABI-L2-SSTF-M6_G16_s20202100000205_e2020210...
+            date_created:              2020-07-28T01:05:45.6Z
+            ...                        ...
+            summary:                   The ABI Sea Surface Temperature (SST) is calcu...
+            time_coverage_end:         2020-07-28T00:59:51.3Z
+            time_coverage_start:       2020-07-28T00:00:20.5Z
+            timeline_id:               ABI Mode 6
+            title:                     ABI L2 Sea Surface (Skin) Temperature
+            units:                     K
+
+    output_instance: xarray:Dataset
+    reader: intake.readers.readers:XArrayDatasetReader
+    user_parameters: {}
+metadata:
+  description: |
+    Kerchunk'd parquet reference set to a small piece GOES 16 data. Equivalent to the
+    Kerchunk tutorial flow by Lucas Sterzinger (see links)
+  references:
+    - https://gist.github.com/rsignell/84f727f25d923aab5aa7c534cef14151
+    - https://medium.com/pangeo/fake-it-until-you-make-it-reading-goes-netcdf4-data-on-aws-s3-as-zarr-for-rapid-data-access-61e33f8fe685
+  license: BSD-3
+
+user_parameters: {}
+version: 2
